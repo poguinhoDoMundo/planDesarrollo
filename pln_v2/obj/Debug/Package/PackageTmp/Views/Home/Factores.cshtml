@@ -1,0 +1,34 @@
+﻿@model List<pln_v2.Models.FACTOR>
+
+@{
+    ViewBag.Title = "Factores";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+
+<div class="card-columns">
+    
+    @foreach (pln_v2.Models.FACTOR factor in Model)
+    {
+            <div class="card animated fadeIn fast">
+                <a href="@Url.Action("Proyectos" ,new { id=factor.ID_FACTOR })"  >
+                    <img class="card-img-top" src="@factor.IMG" [alt]="@factor.NOM_FACTOR">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">@factor.NOM_FACTOR</h5>
+                    
+                    <h6 class="card-subtitle mb-2 text-muted">@factor.DESCRIPCION</h6>
+                    
+                    <p class="card-text">
+                        <small class="text-muted">
+                            @factor.get_Proyectos_x_Factor( factor.ID_FACTOR )
+                            proyectos en este factor
+                        </small>
+                    </p>
+
+                </div>
+            </div>
+    }
+
+
+</div>

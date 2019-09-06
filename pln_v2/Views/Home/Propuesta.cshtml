@@ -1,0 +1,146 @@
+﻿@model pln_v2.Models.PROYECTO
+@{
+    ViewBag.Title = "propuesta";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+<script>
+
+    $(document).ready(function () {
+        var loading = $("#loading");
+        $(document).ajaxStart(function () {
+            loading.show();
+        });
+
+        $(document).ajaxStop(function () {
+            loading.hide();
+        });
+
+
+        $("#frm-propuesta").submit(function () {
+            var form = $(this);
+
+            if ($("#ID_FACTOR").prop('value') == "") {
+                $("#errID_FACTOR").html("Seleccione un Factor");               
+            }
+            else {
+                $.ajax({
+                    dataType: 'JSON',
+                    type: 'POST',
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function (r) {
+                        if (r != "OK")
+                            $("#spResultado").html(r);
+                        else
+                            window.location.replace("/Home/resultOk/0");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert((textStatus + ' ' + errorThrown));
+                        console.log(textStatus + ' ' + errorThrown);
+                    }
+                });
+            }
+            return false;
+        })
+
+    });
+
+    function limpiaValidator() {
+        $("#errID_FACTOR").html("");
+    }
+
+
+</script>
+
+
+<h1 class="text-center">Proponer una idea</h1>
+<p>
+    Sus aportes para construir el Plan de Desarrollo de la Universidad de Caldas son muy importantes y necesarios. Si desea proponer una idea, por favor llene los siguientes campos.
+</p>
+
+
+
+@using (Html.BeginForm("addPropuesta", "Home", FormMethod.Post, new { id= "frm-propuesta" } ))
+{
+    <div class="form-group">        
+        @Html.LabelFor(x => x.NOM_PROYECTO)
+        @Html.TextBoxFor(x => x.NOM_PROYECTO, new { @class = "form-control", @placeHolder = "Nombre" })
+        @Html.ValidationMessageFor(x => x.NOM_PROYECTO, null, new { @class = "text-danger" }) 
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.OBJETIVO)
+        @Html.TextBoxFor(x => x.OBJETIVO, new { @class = "form-control", @placeHolder = "Objetivo" })
+        @Html.ValidationMessageFor(x => x.OBJETIVO, null, new { @class = "text-danger" })
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            @Html.LabelFor(x => x.META)
+            @Html.TextBoxFor(x => x.META, new { @class = "form-control", @placeHolder = "Que se lograria" })
+            @Html.ValidationMessageFor(x => x.COSTO, null, new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-6">
+            @Html.LabelFor(x => x.ID_FACTOR)
+            <select class="form-control" id="ID_FACTOR" name="ID_FACTOR" onchange="limpiaValidator()">
+                <option value="">Seleccione uno</option>
+                @foreach (pln_v2.Models.FACTOR factor in ViewBag.factores)
+                {
+                    <option value="@factor.ID_FACTOR">@factor.NOM_FACTOR</option>
+                }
+            </select>
+            <span class="text-danger" id="errID_FACTOR"></span>            
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            @Html.LabelFor(x => x.COSTO)
+            @Html.TextBoxFor(x => x.COSTO, new { @class = "form-control", @placeHolder = "Costo" })
+            @Html.ValidationMessageFor(x => x.COSTO, null, new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(x => x.REQUISITOS)
+            @Html.TextBoxFor(x => x.REQUISITOS, new { @class = "form-control", @placeHolder = "Requisitos" })
+            @Html.ValidationMessageFor(x => x.REQUISITOS, null, new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(x => x.ID_PRIORIDAD)
+            <select class="form-control" id="ID_PRIORIDAD" name="ID_PRIORIDAD" onchange="limpiaValidator()">
+                <option value="">Seleccione uno</option>
+                @foreach (pln_v2.Models.PLAZO prioridad in ViewBag.prioridades)
+                {
+                    <option value="@prioridad.ID_PRIORIDAD">@prioridad.PRIORIDAD</option>
+                }
+            </select>
+            <span class="text-danger" id="errID_PRIORIDAD"></span>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.DESCRIPCION)
+        @Html.TextAreaFor(x => x.DESCRIPCION, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.DESCRIPCION, null, new { @class = "text-danger", @rows = "4" })
+    </div>
+
+    
+    <div>
+        <a href="@Url.Action("CargaArchivo")" class="text-dark" target="_blank" onClick="window.open(this.href, this.target, 'width=640,height=320'); return false;">
+            <i class="fas fa-paperclip fa-2x clip-black"></i>
+            Describir la idea con un archivo pdf (Opcional)
+        </a>
+    </div>
+    
+        <div id="loading" style="display:none" align="center">
+            <img src="~/assets/img/activity.gif" />
+        </div>
+
+        <div class="text-danger" id="spResultado"></div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-outline-primary">Enviar</button>
+        </div>
+}

@@ -1,0 +1,73 @@
+﻿@model List<pln_v2.Models.MisProyecto>
+
+@{
+    ViewBag.Title = "MisProyectos";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Tipo == 0)
+{
+    <h2 class="text-center" >Mis propuestas</h2>
+}
+
+@if ( ViewBag.Tipo == 1 )
+{
+    <h2 class="text-center">Mis favoritos</h2>
+}
+
+@if (ViewBag.Tipo == 2)
+{
+    <h2 class="text-center">Mi carrito</h2>
+}
+
+
+@if (ViewBag.Tipo == 3)
+{
+    <h2 class="text-center">Todos</h2>
+}
+
+
+<br />
+
+@if (Model.Count > 0 )
+{
+    <table class="table table-sm">
+        <thead>
+            <tr>
+
+                <th scope="col">Factor</th>
+                <th scope="col">Nombre</th>
+
+                @if ((ViewBag.Tipo == 0) || (ViewBag.Tipo == 3))
+                {
+                    <th scope="col">Estado</th>
+                }
+                <th scope="col"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            @foreach (pln_v2.Models.MisProyecto proyectos in Model)
+            {
+                <tr>
+                    <td>@proyectos.NOM_FACTOR</td>
+                    <td>@proyectos.NOM_PROYECTO </td>
+                    @if ((ViewBag.Tipo == 0) || (ViewBag.Tipo == 3))
+                    {
+                        <td>@proyectos.ESTADO </td>
+                    }
+                    <td>
+                        <a href="@Url.Action("ProyectoDetalle", new { id = proyectos.ID_PROYECTO, viene = ViewBag.Tipo  })" class="btn btn btn-outline-primary btn-sm" >
+                            Ver mas...
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>No se encontraron Proyectos bajo ese criterio</h3>
+}

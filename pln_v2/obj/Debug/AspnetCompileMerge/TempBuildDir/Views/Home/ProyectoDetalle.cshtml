@@ -1,0 +1,96 @@
+﻿@model pln_v2.Models.PROYECTO
+
+@{
+    ViewBag.Title = "Proyecto";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        cargaStar(@Model.ID_PROYECTO);
+    });
+
+    function cargaStar(id_proy) {
+        var i = '@Url.Action("pvFavoritos")';
+        i += "/" + id_proy;
+        $("#dvFavoritos").load(i);
+
+    }
+
+</script>
+
+
+@if (Model != null)
+{
+        <h1 class="text-center">@Model.NOM_PROYECTO</h1>
+        <div class="table-responsive-sm">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <div id="dvFavoritos" ></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Objetivo</b></td>
+                        <td>@Model.OBJETIVO</td>
+                    </tr>
+                    <tr>
+                        <td><b>Meta</b></td>
+                        <td>@Model.META</td>
+                    </tr>
+                    <tr>
+                        <td><b>Adjunto</b></td>
+                        <td>
+                            @if (Model.ARCHIVO != null )
+                            {
+                                <a href="@Model.ARCHIVO" target="_blank" class="text-dark">
+                                    <i class="far fa-file-pdf fa-2x"></i> 
+                                </a>
+                            }
+                            else
+                            {
+                                <p>Sin archivo adjunto</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Descripcion</b></td>
+                        <td>@Model.DESCRIPCION</td>
+                    </tr>
+                    <tr>
+                        <td><b>Requisitos</b></td>
+                        <td>@Model.REQUISITOS</td>
+                    </tr>
+                    <tr>
+                        <td><b>Costo aproximado</b></td>
+                        <td>@string.Format("{0:n0}", Model.COSTO)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div align="center">
+
+            @if ( ViewBag.refer == 4 )
+            {
+                <a class="btn btn-outline-primary" href="@Url.Action("Proyectos",  new { id= Model.ID_FACTOR } )">Volver</a>                
+            }
+
+            @if (ViewBag.refer == 5)
+            {
+                <a class="btn btn-outline-primary" href="javascript:history.back()">Volver</a>
+            }
+
+
+            @if ( (ViewBag.refer == 0) || (ViewBag.refer == 1) || (ViewBag.refer == 2) || (ViewBag.refer == 3) )
+            {
+                <a class="btn btn-outline-primary" href="@Url.Action("MisProyectos", new { id = ViewBag.refer } )" >Volver</a>
+            }
+
+        </div>
+}
+else 
+{
+    <h3>No existen proyectos con esa referencia </h3>
+}

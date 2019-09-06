@@ -1,0 +1,48 @@
+﻿@model pln_v2.Models.USUARIO
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <h2 align="center">Iniciar sesion</h2>
+
+
+    @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { id = "frm-login" }))
+    {
+        <div class="form-row">
+            <div class="col-md-4 mb-3"></div>
+            <div class="col-md-4 mb-3 text-center">
+                <div class="form-group">
+                    @Html.TextBox("user", null, new { @class = "form-control", @placeholder = "Usuario" })
+                </div>
+            </div>
+            <div class="col-md-4 mb-3"></div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-md-4 mb-3"></div>
+            <div class="col-md-4 mb-3 text-center">
+                <div class="form-group">
+                    @Html.Password("pass", null, new { @class = "form-control", @placeholder = "Clave" })
+                </div>
+            </div>
+            <div class="col-md-4 mb-3"></div>
+        </div>
+
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+    }
+
+    <div class="alert alert-light text-center" role="alert">
+        Si es estudiante, docente o egresado ingrese con los datos de su SIA. <br />
+        Si es administrativo ingrese con los datos de su SIG.
+    </div>	
+
+    <div style="color:red" align="center">
+        @ViewBag.isValid
+    </div>
+
+</div>

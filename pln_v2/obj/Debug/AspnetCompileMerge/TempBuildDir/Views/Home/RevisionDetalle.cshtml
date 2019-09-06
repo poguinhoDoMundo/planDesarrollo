@@ -1,0 +1,121 @@
+﻿@model pln_v2.Models.PROYECTO
+
+@{
+    ViewBag.Title = "RevisionDetalle";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var loading = $("#loading");
+        $(document).ajaxStart(function () {
+            loading.show();
+        });
+
+        $(document).ajaxStop(function () {
+            loading.hide();
+        });
+    });
+
+
+    function aprProyecto(id_proyecto, concepto) {
+        $.ajax({
+            dataType: 'JSON',
+            type: 'POST',
+            url: "/HOME/aprobarWeb/?id=" + id_proyecto + "&concepto=" + concepto,
+            success: function (r) {
+                if (r == "OK") {
+                    location.reload();
+                }
+                else
+                    alert("paso, pero no retorno Ok" + r);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("error" + (textStatus + ' ' + errorThrown ));
+                console.log(textStatus + ' ' + errorThrown);
+            }
+        })
+    }
+</script>
+
+
+@if (Model != null )
+{
+    
+    <h1 class="text-center">@Model.NOM_PROYECTO</h1>
+
+        if (Model.ESTADO == 0)
+        {
+        <div class="table-responsive-sm">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            <a class="btn btn-success" href="javascript:aprProyecto(@Model.ID_PROYECTO,1)">Aprobar</a>
+                            <a class="btn btn-danger" href="javascript:aprProyecto(@Model.ID_PROYECTO,2)">Rechazar</a>                             
+                            <div id="loading" style="display:none" align="center">
+                                <img src="~/assets/img/activity.gif" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Objetivo</b></td>
+                        <td>@Model.OBJETIVO</td>
+                    </tr>
+                    <tr>
+                        <td><b>Meta</b></td>
+                        <td>@Model.META</td>
+                    </tr>
+                    <tr>
+                        <td><b>Adjunto</b></td>
+                        <td>
+                            @if (Model.ARCHIVO != null)
+                            {
+                                <a href="@Model.ARCHIVO" target="_blank" class="text-dark">
+                                    <i class="far fa-file-pdf fa-2x"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <p>Sin archivo adjunto</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Descripcion</b></td>
+                        <td>@Model.DESCRIPCION</td>
+                    </tr>
+                    <tr>
+                        <td><b>Requisitos</b></td>
+                        <td>@Model.REQUISITOS</td>
+                    </tr>
+                    <tr>
+                        <td><b>Costo aproximado</b></td>
+                        <td>@string.Format("{0:n0}", Model.COSTO)</td>
+                    </tr>
+                    <tr>
+                        <td><b>Fecha registro</b></td>
+                        <td>@Model.FECHA_INGRESO</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        }
+        else
+        {
+           <hr />
+           <div class="text-danger text-center">
+                    El proyecto se encuentra <b>@Model.getEstadoProyecto( Model.ID_PROYECTO)</b>, 
+                    no es posible realizar una revision sobre él.
+           </div>
+           <br />     
+        }
+        <div align="center">
+            <a class="btn btn-primary" href="@Url.Action("Revision")">Volver</a>
+        </div>
+}
+else
+{
+    <h3>No existen proyectos con esa referencia</h3>
+}

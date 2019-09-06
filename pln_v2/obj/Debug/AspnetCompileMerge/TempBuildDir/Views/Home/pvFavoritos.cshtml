@@ -1,0 +1,93 @@
+﻿@{  string claseStar="";
+    string claseSave = "";
+}
+
+<script>
+
+    $(document).ready(function () {
+        var loading = $("#loading");
+        $(document).ajaxStart(function () {
+            loading.show();
+        });
+
+        $(document).ajaxStop(function () {
+            loading.hide();
+        });
+    });
+
+
+    function adFavorito(id_proyecto) {
+        $.ajax({
+            dataType: 'JSON',
+            type: 'POST',
+            url: "/HOME/addFavorito/" + id_proyecto ,
+            success: function (r) {
+                if (r == "OK") {
+                    location.reload();
+                }
+                else
+                    alert(r);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("error" + (textStatus + ' ' + errorThrown));
+                console.log(textStatus + ' ' + errorThrown);
+            }
+        });
+        
+    }
+
+    function adCarro(id_proyecto) {
+        $.ajax({
+            dataType: 'JSON',
+            type: 'POST',
+            url: "/HOME/addCarro/" + id_proyecto ,
+            success: function (r) {
+                if (r == "OK") {
+                    location.reload();
+                }
+                else
+                    alert(r);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("error" + (textStatus + ' ' + errorThrown));
+                console.log(textStatus + ' ' + errorThrown);
+            }
+        });        
+
+    }
+</script>
+
+
+
+@if (ViewBag.isFavorito)
+{
+    claseStar = "fas fa-thumbs-up fa-2x star-save";
+}
+else
+{
+    claseStar = "far fa-thumbs-up fa-2x";
+}
+
+
+@if (ViewBag.isSave)
+{
+    claseSave = "fas fa-bookmark fa-2x star-save";
+}
+else
+{
+    claseSave = "far fa-bookmark fa-2x";
+}
+
+
+<button class="unstyled-button" onclick="adFavorito(@ViewBag.idProyecto)">
+    <i class="@claseStar"></i>
+</button>
+
+<button class="unstyled-button" onclick="adCarro(@ViewBag.idProyecto)">
+    <i class="@claseSave"></i>
+</button>
+
+
+<div id="loading" style="display:none" align="center">
+    <img src="~/assets/img/activity.gif" />
+</div>

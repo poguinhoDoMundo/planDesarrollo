@@ -1,0 +1,32 @@
+﻿@model List<pln_v2.Models.PROYECTO>
+
+@{
+    ViewBag.Title = "Proyectos";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+@if (Model.Count > 0)
+{
+     <div class="card-columns">
+            @foreach (pln_v2.Models.PROYECTO proyecto in Model)
+            {
+                <div class="card animated fadeIn fast"> 
+                    <div class="card-body">
+
+                        <h5 class="card-title">@proyecto.NOM_PROYECTO</h5>
+                        <p class="card-text">@proyecto.OBJETIVO</p>
+
+                        <p class="card-text">
+                            <small class="text-muted">Propuesto por:  @pln_v2.Models.USUARIO.getNombre(proyecto.RESPONSABLE)</small>
+                        </p>
+
+                        <a class="btn btn-outline-primary btn-block" href="@Url.Action("ProyectoDetalle", new { id = proyecto.ID_PROYECTO, viene = 4 })" >Ver mas...</a>
+                    </div>
+                </div>
+            }
+      </div>
+}
+else
+{
+    <h3>No se encontraron Proyectos bajo ese criterio</h3>
+}

@@ -1,0 +1,45 @@
+﻿<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+<div class="container margin-container">
+    <h5>Cargar Archivo</h5>
+    <hr />
+    @if (Convert.ToString(Session["archivo"]) == "")
+    {
+        using (Html.BeginForm("cargaArchivo", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-factura" }))
+        {
+            <div class="form-group ">
+                <input type="file" id="file" name="file" class="form-control" />
+            </div>
+
+                <div class="form-group  text-right">
+                    <input type="submit" value="Subir" class="btn btn-outline-primary" />
+                    <input type="button" value="Cerrar" class="btn btn-outline-success outline" onclick="window.close();" />
+                </div>
+
+                <div class="form-group">
+                    <div class="text-success">
+                        @ViewBag.FileStatus
+                    </div>
+                </div>
+        }
+    }
+    else
+    {
+        using (Html.BeginForm("DeleteFactura", "Home", FormMethod.Post))
+        {
+            <div>
+                <a href="@Convert.ToString(Session["archivo"])" class="text-dark" target="_blank">
+                    <i class="far fa-file-pdf fa-2x"></i>
+                    Ver el archivo cargado
+                </a>
+                <br /><br />
+                <div class="form-group  text-right">
+                    <input type="submit" value="Eliminar archivo" class="btn btn-outline-danger" />
+                    <input type="button" value="Cerrar" class="btn btn-success" onclick="window.close();" />
+                </div>
+            </div>
+        }
+    }
+</div>

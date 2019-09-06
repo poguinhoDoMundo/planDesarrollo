@@ -1,0 +1,139 @@
+﻿<script type="text/javascript">
+    function searchProyecto(){
+        window.location.replace("/Home/SearchProyectos/" + $("#idBuscar").prop('value'));
+    }
+</script>
+
+@{  string pagina = HttpContext.Current.Request.Url.AbsoluteUri.ToUpper();
+    string clasePropuesta = "nav-link";
+    string claseEvaluar = "nav-link";
+    string claseMisProyectos = "nav-link dropdown-toggle";
+    string claseAbout = "nav-link";
+    string claseRevision = "nav-link dropdown-toggle";
+
+    if (pagina.Contains("/PROPUESTA"))
+    {
+        clasePropuesta += " active";
+    }
+    if (pagina.Contains("/FACTORES") || pagina.Contains("/PROYECTOS"))
+    {
+        claseEvaluar += " active";
+    }
+    if (pagina.Contains("/MISPROYECTOS/0") || pagina.Contains("/MISPROYECTOS/1") || pagina.Contains("/MISPROYECTOS/2"))
+    {
+        claseMisProyectos += " active";
+    }
+    if (pagina.Contains("/ABOUT"))
+    {
+        claseAbout += " active";
+    }
+
+    if (pagina.Contains("/REVISION"))
+    {
+        claseRevision = "nav-link dropdown-toggle active";
+
+    }
+
+    if (pagina.Contains("/MISPROYECTOS/3"))
+    {
+        claseRevision = "nav-link dropdown-toggle active";
+    }
+
+    if (pagina.Contains("/REVISIONDETALLE"))
+    {
+        claseRevision = "nav-link dropdown-toggle active";
+    }
+    
+    if (  pagina.Contains("/PROYECTODETALLE") )
+    {
+        if (Request.UrlReferrer != null )
+        {
+            string refer = Request.UrlReferrer.AbsoluteUri.ToUpper();
+
+            if (refer.Contains("/PROYECTOS") )
+            {
+                claseEvaluar = "nav-link active";
+            }
+
+            if (refer.Contains("/MISPROYECTOS/0") || refer.Contains("/MISPROYECTOS/1") || refer.Contains("/MISPROYECTOS/2"))
+            {
+                claseMisProyectos = "nav-link dropdown-toggle active";
+            }
+
+        }
+    }
+
+    }
+
+@if (!pagina.Contains("/LOGIN"))
+{
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-faded">
+            <a class="navbar-brand" href="#"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <a class="navbar-brand" href="#">
+                <img src="/assets/img/UCaldas.png" width="30" height="30" class="d-inline-block align-top" alt="">
+            </a>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+               
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("About")">Inicio</a>
+                    </li>        
+
+                    @if (Session["tipo"] != null)
+                    {
+                        if (Convert.ToString(Session["tipo"]) == "Administrador")
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="@claseRevision" href="#" id="navbarDropdownAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Administración
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="@Url.Action("Revision")">Revisar ideas</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="@Url.Action("MisProyectos", new { id = 3 })">Ver todos</a>
+                                </div>
+                            </li>
+                            
+                        }
+                    }
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="@clasePropuesta" href="@Url.Action("Propuesta")">Proponer una idea</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="@claseEvaluar" href="@Url.Action("factores")" >Banco de ideas</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="@claseMisProyectos" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Mis ideas
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="@Url.Action("MisProyectos", new { id = 0 })">Ideas propuestas </a>
+                            <a class="dropdown-item" href="@Url.Action("MisProyectos", new { id = 1 })">Ideas favoritas</a>
+                            <a class="dropdown-item" href="@Url.Action("MisProyectos", new { id = 2 })">Ideas guardadas</a>
+                            <!--<div class="dropdown-divider"></div>-->
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Login")">Salir</a>
+                    </li>
+
+
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="buscar..." id="idBuscar" name="nmBuscar">
+                    <a class="btn btn-outline-primary my-2 my-sm-0"  href="javascript:searchProyecto()" >Buscar</a>
+                </form>
+              
+</div>
+        </nav>
+}
